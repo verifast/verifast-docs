@@ -1,5 +1,7 @@
 # C Translation Units
 
+## Declarations
+
 <pre>
 <i>translation-unit</i>:
     <i>external-declaration</i>
@@ -125,7 +127,7 @@
 <i>direct-declarator</i>:
     <i>identifier</i>
     <b>(</b> <i>declarator</i> <b>)</b>
-    <i>direct-declarator</i> <b>[</b> <i>type-qualifier-list</i><sub>opt</sub> <i>assignment-expression</i></sub>opt</sub> <b>]</b>
+    <i>direct-declarator</i> <b>[</b> <i>type-qualifier-list</i><sub>opt</sub> <i>assignment-expression</i><sub>opt</sub> <b>]</b>
     <i>direct-declarator</i> <b>[</b> <b>static</b> <i>type-qualifier-list</i><sub>opt</sub> <i>assignment-expression</i> <b>]</b>
     <i>direct-declarator</i> <b>[</b> <i>type-qualifier-list</i> <b>static</b> <i>assignment-expression</i> <b>]</b>
     <i>direct-declarator</i> <b>[</b> <i>type-qualifier-list</i><sub>opt</sub> <b>*</b> <b>]</b>
@@ -196,7 +198,11 @@
 
 <i>static_assert-declaration</i>:
     <b>_Static_assert</b> <b>(</b> <i>constant-expression</i> <b>,</b> <i>string-literal</i> <b>)</b> <b>;</b>
+</pre>
 
+## Statements and blocks
+
+<pre>
 <i>statement</i>:
     <i>labeled-statement</i>
     <i>compound-statement</i>
@@ -240,7 +246,11 @@
     <b>continue</b> <b>;</b>
     <b>break</b> <b>;</b>
     <b>return</b> <i>expression</i><sub>opt</sub> <b>;</b>
+</pre>
 
+## Expressions
+
+<pre>
 <i>primary-expression</i>:
     <i>identifier</i>
     <i>constant</i>
@@ -273,4 +283,86 @@
 <i>argument-expression-list</i>:
     <i>assignment-expression</i>
     <i>argument-expression-list</i> <b>,</b> <i>assignment-expression</i>
+
+<i>unary-expression</i>:
+    <i>postfix-expression</i>
+    <b>++</b> <i>unary-expression</i>
+    <b>-</b> <i>unary-expression</i>
+    <i>unary-operator</i> <i>cast-expression</i>
+    <b>sizeof</b> <i>unary-expression</i>
+    <b>sizeof</b> <b>(</b> <i>type-name</i> <b>)</b>
+    <b>_Alignof</b> <b>(</b> <i>type-name</i> <b>)</b>
+
+<i>unary-operator</i>: one of
+    <b>&amp;</b> <b>*</b> <b>+</b> <b>-</b> <b>~</b> <b>!</b>
+
+<i>cast-expression</i>:
+    <i>unary-expression</i>
+    <b>(</b> <i>type-name</i> <b>)</b> <i>cast-expression</i>
+
+<i>multiplicative-expression</i>:
+    <i>cast-expression</i>
+    <i>multiplicative-expression</i> <b>*</b> <i>cast-expression</i>
+    <i>multiplicative-expression</i> <b>/</b> <i>cast-expression</i>
+    <i>multiplicative-expression</i> <b>%</b> <i>cast-expression</i>
+
+<i>additive-expression</i>:
+    <i>multiplicative-expression</i>
+    <i>additive-expression</i> <b>+</b> <i>multiplicative-expression</i>
+    <i>additive-expression</i> <b>-</b> <i>multiplicative-expression</i>
+
+<i>shift-expression</i>:
+    <i>additive-expression</i>
+    <i>shift-expression</i> <b>&lt;&lt;</b> <i>additive-expression</i>
+    <i>shift-expression</i> <b>>></b> <i>additive-expression</i>
+
+<i>relational-expression</i>:
+    <i>shift-expression</i>
+    <i>relational-expression</i> <b>&lt;</b> <i>shift-expression</i>
+    <i>relational-expression</i> <b>></b> <i>shift-expression</i>
+    <i>relational-expression</i> <b>&lt;=</b> <i>shift-expression</i>
+    <i>relational-expression</i> <b>>=</b> <i>shift-expressions</i>
+
+<i>equality-expression</i>:
+    <i>relational-expression</i>
+    <i>equality-expression</i> <b>==</b> <i>relational-expression</i>
+    <i>equality-expression</i> <b>!=</b> <i>relational-expression</i>
+
+<i>AND-expression</i>:
+    <i>equality-expression</i>
+    <i>AND-expression</i> <b>&amp;</b> <i>equality-expression</i>
+
+<i>exclusive-OR-expression</i>:
+    <i>AND-expression</i>
+    <i>exclusive-OR-expression</i> <b>^</b> <i>AND-expression</i>
+
+<i>inclusive-OR-expression</i>:
+    <i>exclusive-OR-expression</i>
+    <i>inclusive-OR-expression</i> <b>|</b> <i>exclusive-OR-expression</i>
+
+<i>logical-AND-expression</i>:
+    <i>inclusive-OR-expression</i>
+    <i>logical-AND-expression</i> <b>&amp;&amp;</b> <i>inclusive-OR-expression</i>
+
+<i>logical-OR-expression</i>:
+    <i>logical-AND-expression</i>
+    <i>logical-OR-expression</i> <b>||</b> <i>logical-AND-expression</i>
+
+<i>conditional-expression</i>:
+    <i>logical-OR-expression</i>
+    <i>logical-OR-expression</i> <b>?</b> <i>expression</i> <b>:</b> <i>conditional-expression</i>
+
+<i>assignment-expression</i>:
+    <i>conditional-expression</i>
+    <i>unary-expression</i> <i>assignment-operator</i> <i>assignment-expression</i>
+
+<i>assignment-operator</i>: one of
+    <b>=</b> <b>*=</b> <b>/=</b> <b>%=</b> <b>+=</b> <b>-=</b> <b>&lt;&lt;=</b> <b>>>=</b> <b>&amp;=</b> <b>^=</b> <b>|=</b>
+
+<i>expression</i>:
+    <i>assignment-expression</i>
+    <i>expression</i> <b>,</b> <i>assignment-expression</i>
+
+<i>constant-expression</i>:
+    <i>conditional-expression</i>
 </pre>
