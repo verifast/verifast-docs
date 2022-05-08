@@ -10,10 +10,62 @@
 <i>external-declaration</i>:
     <i>function-definition</i>
     <i>declaration</i>
+    <i style="color: purple">ghost-declaration-block</i>
+
+<i>ghost-declaration-block</i>:
+    <b>/*@</b> <i>ghost-declaration-list</i> <b>@*/</b>
+
+<i>ghost-declaration-list</i>:
+    <i>ghost-declaration</i>
+    <i>ghost-declaration-list</i> <i>ghost-declaration</i>
+
+<i>ghost-declaration</i>:
+    <i>inductive-datatype-declaration</i>
+    <i>fixpoint-function-definition</i>
+    <i>predicate-declaration</i>
+    <i>predicate-family-declaration</i>
+    <i>predicate-family-instance-definition</i>
+    <i>predicate-constructor-definition</i>
+    <i>lemma-function-declaration</i>
+
+<i>inductive-datatype-declaration</i>:
+    <b>inductive</b> <i>identifier</i> <b>=</b> <b>|</b><sub>opt</sub> <i>inductive-datatype-case-list</i> <b>;</b>
+
+<i>inductive-datatype-case-list</i>:
+    <i>inductive-datatype-case-declaration</i>
+    <i>inductive-datatype-case-list</i> <b>|</b> <i>inductive-datatype-case-declaration</i>
+
+<i>inductive-datatype-case-declaration</i>:
+    <i>identifier</i>
+    <i>identifier</i> <b>(</b> <i>parameter-list</i><sub>opt</sub> <b>)</b>
+
+<i>fixpoint-function-definition</i>:
+    <b>fixpoint</b> <i>function-definition</i>
+
+<i>predicate-declaration</i>:
+    <b>predicate</b> <i>identifier</i> <b>(</b> <i>parameter-list</i> <b>)</b> <b>;</b>
+    <i>predicate-keyword</i> <i>identifier</i> <b>(</b> <i>parameter-list</i> <b>)</b> <b>=</b> <i>assertion</i> <b>;</b>
+
+<i>predicate-keyword</i>:
+    <b>predicate</b>
+    <b>copredicate</b>
+
+<i>predicate-family-declaration</i>:
+    <b>predicate_family</b> <i>identifier</i> <b>(</b> <i>parameter-list</i> <b>)</b> <b>(</b> <i>parameter-list</i> <b>)</b> <b>;</b>
+
+<i>predicate-family-instance-definition</i>:
+    <b>predicate_family_instance</b> <i>identifier</i> <b>(</b> <i>argument-expression-list</i><sub>opt</sub> <b>)</b> <b>(</b> <i>parameter-list</i> <b>)</b> <b>=</b> <i>assertion</i> <b>;</b>
+
+<i>predicate-constructor-definition</i>:
+    <b>predicate_ctor</b> <i>identifier</i> <b>(</b> <i>parameter-list</i> <b>)</b> <b>(</b> <i>parameter-list</i> <b>)</b> <b>=</b> <i>assertion</i> <b>;</b>
+
+<i>lemma-function-declaration</i>:
+    <b>lemma</b> <i>declaration</i>
+    <b>lemma</b> <i>function-definition</i>
 
 <i>function-definition</i>:
     <i>declaration-specifiers</i> <i>declarator</i> <i>declaration-list</i><sub>opt</sub> <i>compound-statement</i>
-
+:
 <i>declaration-list</i>:
     <i>declaration</i>
     <i>declaration-list</i> <i>declaration</i>
@@ -131,8 +183,29 @@
     <i>direct-declarator</i> <b>[</b> <b>static</b> <i>type-qualifier-list</i><sub>opt</sub> <i>assignment-expression</i> <b>]</b>
     <i>direct-declarator</i> <b>[</b> <i>type-qualifier-list</i> <b>static</b> <i>assignment-expression</i> <b>]</b>
     <i>direct-declarator</i> <b>[</b> <i>type-qualifier-list</i><sub>opt</sub> <b>*</b> <b>]</b>
-    <i>direct-declarator</i> <b>(</b> <i>parameter-type-list</i> <b>)</b>
+    <i>direct-declarator</i> <b>(</b> <i>parameter-type-list</i> <b>)</b> <i style="color: purple">specification</i><sub>opt</sub>
     <i>direct-declarator</i> <b>(</b> <i>identifier-list</i><sub>opt</sub> <b>)</b>
+
+<i>specification</i>:
+    <i>function-type-clause</i><sub>opt</sub> <i>requires-clause</i> <i>ensures-clause</i> <i>terminates-clause</i><sub>opt</sub>
+
+<i>function-type-clause</i>:
+    <b>/*@</b> <b>:</b> <i>identifier</i> <i>arguments</i><sub>opt</sub> </b>*@/</b>
+
+<i>arguments</i>:
+    <b>(</b> <i>argument-expression-list</i> <b>)</b>
+
+<i>requires-clause</i>:
+    <b>/*@</b> <b>requires</b> <i>assertion</i> <b>;</b> <b>@*/</b>
+    <b>requires</b> <i>assertion</i> <b>;</b>
+
+<i>ensures-clause</i>:
+    <b>/*@</b> <b>ensures</b> <i>assertion</i> <b>;</b> <b>@*/</b>
+    <b>ensures</b> <i>assertion</i> <b>;</b>
+
+<i>terminates-clause</i>:
+    <b>/*@</b> <b>terminates</b> <b>;</b> <b>@*/</b>
+    <b>terminates</b> <b>;</b>
 
 <i>pointer</i>:
     <b>*</b> <i>type-qualifier-list</i><sub>opt</sub>
@@ -150,7 +223,7 @@
     <i>parameter-declaration</i>
     <i>parameter-list</i> <b>,</b> <i>parameter-declaration</i>
 
-<i>paraneter-declaration</i>:
+<i>parameter-declaration</i>:
     <i>declaration-specifiers</i> <i>declarator</i>
     <i>declaration-specifiers</i> <i>abstract-declarator</i><sub>opt</sub>
 
@@ -210,6 +283,8 @@
     <i>selection-statement</i>
     <i>iteration-statement</i>
     <i>jump-statement</i>
+    <i style="color: purple">ghost-statement-block</i>
+    <i style="color: purple">ghost-statement</i>
 
 <i>labeled-statement</i>:
     <i>identifier</i> <b>:</b> <i>statement</i>
@@ -246,6 +321,67 @@
     <b>continue</b> <b>;</b>
     <b>break</b> <b>;</b>
     <b>return</b> <i>expression</i><sub>opt</sub> <b>;</b>
+
+<i>ghost-statement-block</i>:
+    <b>/*@</b> <i>ghost-statement</i> <b>@*/</b>
+
+<i>ghost-statement</i>:
+    <b>open</b> <i>coefficient</i><sub>opt</sub> <i>predicate-assertion</i> <b>;</b>
+    <b>close</b> <i>coefficient</i><sub>opt</sub> <i>predicate-assertion</i> <b>;</b>
+    <i>statement</i>
+
+</pre>
+
+## Assertions
+
+<pre>
+<i>primary-assertion</i>:
+    <i>coefficient</i><sub>opt</sub> <i>points-to-assertion</i>
+    <i>coefficient</i><sub>opt</sub> <i>predicate-assertion</i>
+    <i>expression</i>
+    <b>switch</b> <b>(</b> <i>expression</i> <b>)</b> <b>{</b> <i>switch-assertion-case-list</i> <b>}</b>
+    <b>(</b> <i>assertion</i> <b>)</b>
+    <b>forall_</b> <b>(</b> <i>type</i> <i>identifier</i> <b>;</b> <i>expression</i> <b>)</b>
+    <b>emp</b>
+
+<i>coefficient</i>:
+    <b>[</b> <i>pattern</i> <b>]</b>
+
+<i>points-to-assertion</i>:
+    <i>conditional-expression</i> <b>|-></b> <i>pattern</i>
+
+<i>predicate-assertion</i>:
+    <i>identifier</i> <i>patterns</i><sub>opt</sub> <i>patterns</i>
+
+<i>patterns</i>:
+    <b>(</b> <i>pattern-list</i><sub>opt</sub> <b>)</b>
+
+<i>pattern-list</i>:
+    <i>pattern</i>
+    <i>pattern-list</i> <b>,</b> <i>pattern</i>
+
+<i>pattern</i>:
+    <b>_</b>
+    <b>?</b> <i>identifier</i>
+    <i>identifier</i> <i>patterns</i>
+    <i>expression</i>
+    <b>^</b> <i>expression</i>
+
+<i>switch-assertion-case-list</i>:
+    <i>switch-assertion-case</i>
+    <i>switch-assertion-case-list</i> <i>switch-assertion-case</i>
+
+<i>switch-assertion-case</i>:
+    <b>case</b> <i>identifier</i> <i>case-arguments</i><sub>opt</sub> <b>:</b> <b>return</b> <i>assertion</i> <b>;</b>
+
+<i>case-arguments</i>:
+    <b>(</b> <i>identifier-list</i><sub>opt</sub> <b>)</b>
+
+<i>assertion</i>:
+    <i>primary-assertion</i>
+    <i>primary-assertion</i> <b>&*&</b> <i>assertion</i>
+    <i>expression</i> <b>?</b> <i>assertion</i> <b>:</b> <i>assertion</i>
+    <b>ensures</b> <i>assertion</i>
 </pre>
 
 ## Expressions
