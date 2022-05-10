@@ -1,4 +1,4 @@
-# VeriFast Documentation
+# VeriFast Docs
 
 This repository contains some work-in-progress documentation for [VeriFast](https://github.com/verifast/verifast).
 
