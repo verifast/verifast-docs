@@ -4,6 +4,7 @@ This repository contains some work-in-progress documentation for [VeriFast](http
 
 - [FAQ](faq.md)
 - [C grammar with VeriFast annotations](c_translation_units.md)
+- [Symbolic execution](symexec.md)
 
 See also:
 - [The VeriFast Tutorial](https://doi.org/10.5281/zenodo.887906)
