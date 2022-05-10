@@ -108,18 +108,22 @@ For fixpoint functions defined by well-founded recursion, see the `wf_funcX.c` e
 
 <pre>
 <span style="color: purple"><i>predicate-declaration</i>:
-    <b>predicate</b> <i>identifier</i> <b>(</b> <i>parameter-list</i> <b>)</b> <b>;</b>
-    <i>predicate-keyword</i> <i>identifier</i> <b>(</b> <i>parameter-list</i> <b>)</b> <b>=</b> <i>assertion</i> <b>;</b>
+    <b>predicate</b> <i>identifier</i> <i>predicate-parameters</i> <b>;</b>
+    <i>predicate-keyword</i> <i>identifier</i> <i>predicate-parameters</i> <b>=</b> <i>assertion</i> <b>;</b>
 
 <i>predicate-keyword</i>:
     <b>predicate</b>
     <b>copredicate</b>
 
+<i>predicate-parameters</i>:
+    <b>(</b> <i>parameter-list</i> <b>)</b>
+    <b>(</b> <i>parameter-list</i> <b>;</b> <i>parameter-list</i> <b>)</b>
+
 <i>predicate-family-declaration</i>:
-    <b>predicate_family</b> <i>identifier</i> <b>(</b> <i>parameter-list</i> <b>)</b> <b>(</b> <i>parameter-list</i> <b>)</b> <b>;</b>
+    <b>predicate_family</b> <i>identifier</i> <b>(</b> <i>parameter-list</i> <b>)</b> <i>predicate-parameters</i> <b>;</b>
 
 <i>predicate-family-instance-definition</i>:
-    <b>predicate_family_instance</b> <i>identifier</i> <b>(</b> <i>argument-expression-list</i><sub>opt</sub> <b>)</b> <b>(</b> <i>parameter-list</i> <b>)</b> <b>=</b> <i>assertion</i> <b>;</b>
+    <b>predicate_family_instance</b> <i>identifier</i> <b>(</b> <i>argument-expression-list</i> <b>)</b> <i>predicate-parameters</i> <b>=</b> <i>assertion</i> <b>;</b>
 
 <i>predicate-constructor-definition</i>:
     <b>predicate_ctor</b> <i>identifier</i> <b>(</b> <i>parameter-list</i> <b>)</b> <b>(</b> <i>parameter-list</i> <b>)</b> <b>=</b> <i>assertion</i> <b>;</b></span>
@@ -193,7 +197,7 @@ For fixpoint functions defined by well-founded recursion, see the `wf_funcX.c` e
     <span style="color: purple"><i>identifier</i> <i>generic-arguments</i><sub>opt</sub>
     <b>real</b>
     <b>fixpoint</b> <b>(</b> <i>type-list</i> <b>)</b>
-    <b>predicate</b> <b>(</b> <i>type-list</i> <b>)</b>
+    <b>predicate</b> <i>predicate-parameters</i>
     <b>any</b>
 
 <i>generic-arguments</i>:
