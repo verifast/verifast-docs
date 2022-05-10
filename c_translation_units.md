@@ -34,7 +34,8 @@ It then checks well-formedness of the various declarations, and then verifies ea
     <i>predicate-family-declaration</i>
     <i>predicate-family-instance-definition</i>
     <i>predicate-constructor-definition</i>
-    <i>lemma-function-declaration</i></span>
+    <i>lemma-function-declaration</i>
+    <i>box-class-declaration</i></span>
 </pre>
 
 ### Inductive datatypes
@@ -133,8 +134,13 @@ For fixpoint functions defined by well-founded recursion, see the `wf_funcX.c` e
 
 <pre>
 <span style="color: purple"><i>lemma-function-declaration</i>:
-    <b>lemma</b> <i>declaration</i>
-    <b>lemma</b> <i>function-definition</i></span>
+    <i>lemma-keyword</i> <i>declaration</i>
+    <i>lemma-keyword</i> <i>function-definition</i>
+
+<i>lemma-keyword</i>:
+    <b>lemma</b>
+    <b>lemma_auto</b>
+    <b>lemma_auto</b> <b>(</b> <i>expression</i> <b>)</b></span>
 </pre>
 
 ### Function definitions
@@ -369,6 +375,10 @@ For fixpoint functions defined by well-founded recursion, see the `wf_funcX.c` e
     <b>_Static_assert</b> <b>(</b> <i>constant-expression</i> <b>,</b> <i>string-literal</i> <b>)</b> <b>;</b>
 </pre>
 
+### Shared boxes
+
+See [*Shared boxes: rely-guarantee reasoning in VeriFast*](http://www.cs.kuleuven.be/publicaties/rapporten/cw/CW662.pdf).
+
 ## Statements and blocks
 
 <pre>
@@ -408,10 +418,24 @@ For fixpoint functions defined by well-founded recursion, see the `wf_funcX.c` e
     <b>switch</b> <b>(</b> <i>expression</i> <b>)</b> <i>statement</i>
 
 <i>iteration-statement</i>:
-    <b>while</b> <b>(</b> <i>expression</i> <b>)</b> <i>statement</i>
-    <b>do</b> <i>statement</i> <b>while</b> <b>(</b> <i>expression</i> <b>)</b> <b>;</b>
-    <b>for</b> <b>(</b> <i>expression</i><sub>opt</sub> <b>;</b> <i>expression</i><sub>opt</sub> <b>;</b> <i>expression</i><sub>opt</sub> <b>)</b> <i>statement</i>
-    <b>for</b> <b>(</b> <i>declaration</i> <i>expression</i><sub>opt</sub> <b>;</b> <i>expression</i><sub>opt</sub> <b>)</b> <i>statement</i>
+    <b>while</b> <b>(</b> <i>expression</i> <b>)</b> <i style="color: purple">loop-annotations</i> <i>statement</i>
+    <b>do</b> <i style="color: purple">loop-annotations</i> <i>statement</i> <b>while</b> <b>(</b> <i>expression</i> <b>)</b> <b>;</b>
+    <b>for</b> <b>(</b> <i>expression</i><sub>opt</sub> <b>;</b> <i>expression</i><sub>opt</sub> <b>;</b> <i>expression</i><sub>opt</sub> <b>)</b> <i style="color: purple">loop-annotations</i> <i>statement</i>
+    <b>for</b> <b>(</b> <i>declaration</i> <i>expression</i><sub>opt</sub> <b>;</b> <i>expression</i><sub>opt</sub> <b>)</b> <i style="color: purple">loop-annotations</i> <i>statement</i>
+
+<span style="color: purple"><i>loop-annotations</i>:
+    <i>loop-annotation</i>
+    <i>loop-annotations</i> <i>loop-annotation</i>
+
+<i>loop-annotation</i>:
+    <b>/*@</b> <i>loop-ghost-annotation</i> <b>@*/</b>
+    <i>loop-ghost-annotation</i>
+
+<i>loop-ghost-annotation</i>:
+    <b>invariant</b> <i>assertion</i> <b>;</b>
+    <b>requires</b> <i>assertion</i> <b>;</b>
+    <b>ensures</b> <i>assertion</i> <b>;</b>
+    <b>decreases</b> <i>expression</i> <b>;</b></span>
 
 <i>jump-statement</i>:
     <b>goto</b> <i>identifier</i> <b>;</b>
@@ -425,9 +449,20 @@ For fixpoint functions defined by well-founded recursion, see the `wf_funcX.c` e
 <i>ghost-statement</i>:
     <b>open</b> <i>coefficient</i><sub>opt</sub> <i>predicate-assertion</i> <b>;</b>
     <b>close</b> <i>coefficient</i><sub>opt</sub> <i>predicate-assertion</i> <b>;</b>
+    <b>leak</b> <i>assertion</i> <b>;</b>
+    <b>invariant</b> <i>assertion</i> <b>;</b>
+    <b>produce_lemma_function_pointer_chunk</b> <i>identifier</i> <i>generic-arguments</i><sub>opt</sub> <i>arguments</i> <b>(</b> <i>identifier-list</i> <b>)</b> <i>compound-statement</i> <i>statement</i>
+    <b>duplicate_lemma_function_pointer_chunk</b> <b>(</b> <i>expression</i> <b>)</b> <b>;</b>
+    <b>produce_function_pointer_chunk</b> <i>identifier</i> <i>generic-arguments</i><sub>opt</sub> <b>(</b> <i>expression</i> <b>)</b> <i>arguments</i> <b>(</b> <i>identifier-list</i> <b>)</b> <i>compound-statement</i>
+    <b>merge_fractions</b> <i>assertion</i> <b>;</b>
+    <i>shared-boxes-ghost-statements</i>
     <i>statement</i></span>
 
 </pre>
+
+### Shared boxes
+
+See [*Shared boxes: rely-guarantee reasoning in VeriFast*](http://www.cs.kuleuven.be/publicaties/rapporten/cw/CW662.pdf).
 
 ## Assertions
 
