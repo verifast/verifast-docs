@@ -109,8 +109,8 @@ For fixpoint functions defined by well-founded recursion, see the `wf_funcX.c` e
 
 <pre>
 <span style="color: purple"><i>predicate-declaration</i>:
-    <b>predicate</b> <i>identifier</i> <i>predicate-parameters</i> <b>;</b>
-    <i>predicate-keyword</i> <i>identifier</i> <i>predicate-parameters</i> <b>=</b> <i>assertion</i> <b>;</b>
+    <b>predicate</b> <i>identifier</i> <i>generic-parameters</i><sub>opt</sub> <i>predicate-parameters</i> <b>;</b>
+    <i>predicate-keyword</i> <i>identifier</i> <i>generic-parameters</i><sub>opt</sub> <i>predicate-parameters</i> <b>=</b> <i>assertion</i> <b>;</b>
 
 <i>predicate-keyword</i>:
     <b>predicate</b>
@@ -480,7 +480,7 @@ See [*Shared boxes: rely-guarantee reasoning in VeriFast*](http://www.cs.kuleuve
     <i>conditional-expression</i> <b>|-></b> <i>pattern</i>
 
 <i>predicate-assertion</i>:
-    <i>identifier</i> <i>patterns</i><sub>opt</sub> <i>patterns</i>
+    <i>identifier</i> <i>generic-arguments</i><sub>opt</sub> <i>patterns</i><sub>opt</sub> <i>patterns</i>
 
 <i>patterns</i>:
     <b>(</b> <i>pattern-list</i><sub>opt</sub> <b>)</b>
