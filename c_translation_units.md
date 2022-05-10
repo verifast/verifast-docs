@@ -12,7 +12,7 @@
     <i>declaration</i>
     <i style="color: purple">ghost-declaration-block</i>
 
-<i>ghost-declaration-block</i>:
+<span style="color: purple"><i>ghost-declaration-block</i>:
     <b>/*@</b> <i>ghost-declaration-list</i> <b>@*/</b>
 
 <i>ghost-declaration-list</i>:
@@ -61,11 +61,11 @@
 
 <i>lemma-function-declaration</i>:
     <b>lemma</b> <i>declaration</i>
-    <b>lemma</b> <i>function-definition</i>
+    <b>lemma</b> <i>function-definition</i></span>
 
 <i>function-definition</i>:
     <i>declaration-specifiers</i> <i>declarator</i> <i>declaration-list</i><sub>opt</sub> <i>compound-statement</i>
-:
+
 <i>declaration-list</i>:
     <i>declaration</i>
     <i>declaration-list</i> <i>declaration</i>
@@ -186,7 +186,7 @@
     <i>direct-declarator</i> <b>(</b> <i>parameter-type-list</i> <b>)</b> <i style="color: purple">specification</i><sub>opt</sub>
     <i>direct-declarator</i> <b>(</b> <i>identifier-list</i><sub>opt</sub> <b>)</b>
 
-<i>specification</i>:
+<span style="color: purple"><i>specification</i>:
     <i>function-type-clause</i><sub>opt</sub> <i>requires-clause</i> <i>ensures-clause</i> <i>terminates-clause</i><sub>opt</sub>
 
 <i>function-type-clause</i>:
@@ -205,7 +205,7 @@
 
 <i>terminates-clause</i>:
     <b>/*@</b> <b>terminates</b> <b>;</b> <b>@*/</b>
-    <b>terminates</b> <b>;</b>
+    <b>terminates</b> <b>;</b></span>
 
 <i>pointer</i>:
     <b>*</b> <i>type-qualifier-list</i><sub>opt</sub>
@@ -322,20 +322,20 @@
     <b>break</b> <b>;</b>
     <b>return</b> <i>expression</i><sub>opt</sub> <b>;</b>
 
-<i>ghost-statement-block</i>:
+<span style="color: purple"><i>ghost-statement-block</i>:
     <b>/*@</b> <i>ghost-statement</i> <b>@*/</b>
 
 <i>ghost-statement</i>:
     <b>open</b> <i>coefficient</i><sub>opt</sub> <i>predicate-assertion</i> <b>;</b>
     <b>close</b> <i>coefficient</i><sub>opt</sub> <i>predicate-assertion</i> <b>;</b>
-    <i>statement</i>
+    <i>statement</i></span>
 
 </pre>
 
 ## Assertions
 
 <pre>
-<i>primary-assertion</i>:
+<span style="color: purple"><i>primary-assertion</i>:
     <i>coefficient</i><sub>opt</sub> <i>points-to-assertion</i>
     <i>coefficient</i><sub>opt</sub> <i>predicate-assertion</i>
     <i>expression</i>
@@ -381,7 +381,7 @@
     <i>primary-assertion</i>
     <i>primary-assertion</i> <b>&*&</b> <i>assertion</i>
     <i>expression</i> <b>?</b> <i>assertion</i> <b>:</b> <i>assertion</i>
-    <b>ensures</b> <i>assertion</i>
+    <b>ensures</b> <i>assertion</i></span>
 </pre>
 
 ## Expressions
