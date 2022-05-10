@@ -1,5 +1,13 @@
 # C Translation Units
 
+This document describes how VeriFast verifies a `.c` file. It does so when the `.c` file is specified as a command-line argument of the `verifast` command-line tool, or when the `.c` file is loaded into the VeriFast IDE and the *Verify* command is issued.
+
+VeriFast first performs preprocessing on the `.c` file. While doing so, it checks that the expansion of a header file does not depend on macros defined before the inclusion of the header file. That is, it checks that the expansion of header files is *context-free*. This is part of ensuring the soundness of the verification of C programs consisting of multiple `.c` files.
+
+The sequence of tokens obtained after preprocessing is called a *translation unit*. VeriFast then parses the translation unit, checking that it conforms with the grammar shown below.
+
+It then checks well-formedness of the various declarations, and then verifies each function that has a specification. It verifies the functions in the order in which they appear in the translation unit. We detail the well-formedness conditions for the various declarations and we describe the verification of functions below.
+
 ## Declarations
 
 <pre>
@@ -29,7 +37,10 @@
     <i>lemma-function-declaration</i>
 
 <i>inductive-datatype-declaration</i>:
-    <b>inductive</b> <i>identifier</i> <b>=</b> <b>|</b><sub>opt</sub> <i>inductive-datatype-case-list</i> <b>;</b>
+    <b>inductive</b> <i>identifier</i> <i>generic-parameters</i><sub>opt</sub> <b>=</b> <b>|</b><sub>opt</sub> <i>inductive-datatype-case-list</i> <b>;</b>
+
+<i>generic-parameters</i>:
+    <b>&lt;</b> <i>identifier-list</i> <b>></b>
 
 <i>inductive-datatype-case-list</i>:
     <i>inductive-datatype-case-declaration</i>
@@ -113,6 +124,21 @@
     <i>struct-or-union-specifier</i>
     <i>enum-specifier</i>
     <i>typedef-name</i>
+    <span style="color: purple"><i>identifier</i> <i>generic-arguments</i><sub>opt</sub>
+    <b>real</b>
+    <b>fixpoint</b> <b>(</b> <i>type-list</i> <b>)</b>
+    <b>predicate</b> <b>(</b> <i>type-list</i> <b>)</b>
+    <b>any</b>
+
+<i>generic-arguments</i>:
+    <b>&lt;</b> <i>type-list</i> <b>></b>
+
+<i>type-list</i>:
+    <i>type</i>
+    <i>type-list</i> <b>,</b> <i>type</i>
+
+<i>type</i>:
+    <i>declaration-specifiers</i></span>
 
 <i>struct-or-union-specifier</i>:
     <i>struct-or-union</i> <i>identifier</i><sub>opt</sub> <b>{</b> <i>struct-declaration-list</i> <b>}</b>
@@ -183,7 +209,7 @@
     <i>direct-declarator</i> <b>[</b> <b>static</b> <i>type-qualifier-list</i><sub>opt</sub> <i>assignment-expression</i> <b>]</b>
     <i>direct-declarator</i> <b>[</b> <i>type-qualifier-list</i> <b>static</b> <i>assignment-expression</i> <b>]</b>
     <i>direct-declarator</i> <b>[</b> <i>type-qualifier-list</i><sub>opt</sub> <b>*</b> <b>]</b>
-    <i>direct-declarator</i> <b>(</b> <i>parameter-type-list</i> <b>)</b> <i style="color: purple">specification</i><sub>opt</sub>
+    <i>direct-declarator</i> <span style="color: purple"><i>generic-parameters</i><sub>opt</sub></span> <b>(</b> <i>parameter-type-list</i> <b>)</b> <i style="color: purple">specification</i><sub>opt</sub>
     <i>direct-declarator</i> <b>(</b> <i>identifier-list</i><sub>opt</sub> <b>)</b>
 
 <span style="color: purple"><i>specification</i>:
@@ -289,6 +315,7 @@
 <i>labeled-statement</i>:
     <i>identifier</i> <b>:</b> <i>statement</i>
     <b>case</b> <i>constant-expression</i> <b>:</b> <i>statement</i>
+    <span style="color: purple"><b>case</b> <i>identifier</i> <i>case-arguments</i><sub>opt</sub> <b>:</b> <i>statement</i></span>
     <b>default</b> <b>:</b> <i>statement</i>
 
 <i>compound-statement</i>:
@@ -388,11 +415,19 @@
 
 <pre>
 <i>primary-expression</i>:
-    <i>identifier</i>
+    <i>identifier</i> <span style="color: purple"><i>generic-arguments</i><sub>opt</sub></span>
     <i>constant</i>
     <i>string-literal</i>
     <b>(</b> <i>expression</i> <b>)</b>
     <i>generic-selection</i>
+    <span style="color: purple"><b>switch</b> <b>(</b> <i>expression</i> <b>)</b> <b>{</b> <i>switch-expression-case-list</i> <b>}</b>
+
+<i>switch-expression-case-list</i>:
+    <i>switch-expression-case</i>
+    <i>switch-expression-case-list</i> <i>switch-expression-case</i>
+
+<i>switch-expression-case</i>:
+    <b>case</b> <i>identifier</i> <i>case-arguments</i><sub>opt</sub> <b>:</b> <b>return</b> <i>expression</i> <b>;</b></span>
 
 <i>generic-selection</i>:
     <b>_Generic</b> <b>(</b> <i>assignment-expression</i> <b>,</b> <i>generic-assoc-list</i> <b>)</b>
