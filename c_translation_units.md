@@ -34,9 +34,13 @@ It then checks well-formedness of the various declarations, and then verifies ea
     <i>predicate-family-declaration</i>
     <i>predicate-family-instance-definition</i>
     <i>predicate-constructor-definition</i>
-    <i>lemma-function-declaration</i>
+    <i>lemma-function-declaration</i></span>
+</pre>
 
-<i>inductive-datatype-declaration</i>:
+### Inductive datatypes
+
+<pre>
+<span style="color: purple"><i>inductive-datatype-declaration</i>:
     <b>inductive</b> <i>identifier</i> <i>generic-parameters</i><sub>opt</sub> <b>=</b> <b>|</b><sub>opt</sub> <i>inductive-datatype-case-list</i> <b>;</b>
 
 <i>generic-parameters</i>:
@@ -48,12 +52,62 @@ It then checks well-formedness of the various declarations, and then verifies ea
 
 <i>inductive-datatype-case-declaration</i>:
     <i>identifier</i>
-    <i>identifier</i> <b>(</b> <i>parameter-list</i><sub>opt</sub> <b>)</b>
+    <i>identifier</i> <b>(</b> <i>parameter-list</i><sub>opt</sub> <b>)</b></span>
+</pre>
 
-<i>fixpoint-function-definition</i>:
-    <b>fixpoint</b> <i>function-definition</i>
+We describe inductive datatypes by example. The declaration
 
-<i>predicate-declaration</i>:
+<pre>
+<b>inductive</b> list&lt;t> = nil | cons(t, list&lt;t>);
+</pre>
+
+introduces the generic type name `list` and generic pure function names `nil` and `cons`. For any type `T`, type `list<T>` denotes the smallest set that satisfies the following constraints:
+- `nil<T>` is an element of the set.
+- If `v` is a value of type `T` and `l` is an element of the set, then `cons<T>(v, l)` is an element of the set.
+- For any value `v` of type `T` and element `l` of the set, `nil<T>` is distinct from `cons<T>(v, l)`.
+- For any values `v1` and `v2` of type `T` and elements `l1` and `l2` of the set, `cons<T>(v1, l1)` is equal to `cons<T>(v2, l2)` only if `v1` is equal to `v2` and `l1` is equal to `l2`.
+
+The inductive datatype declarations of a translation unit may refer to each other. That is, types may be defined by mutual induction. VeriFast checks that each type is well-defined (recursion through positive positions only) and inhabited.
+
+### Fixpoint functions
+
+<pre>
+<span style="color: purple"><i>fixpoint-function-definition</i>:
+    <b>fixpoint</b> <i>function-definition</i></span>
+</pre>
+
+A fixpoint function definition defines a pure function in one of three ways:
+1. primitive recursive definition
+2. simple non-recursive definition
+3. definition by well-founded recursion
+
+We describe each case by example. The declaration
+
+<pre>
+<b>fixpoint</b> <b>int</b> length&lt;t>(list&lt;t> xs) {
+    <b>switch</b> (xs) {
+        <b>case</b> nil: <b>return</b> 0;
+        <b>case</b> cons(x, xs0): <b>return</b> length(xs0);
+    }
+}
+</pre>
+
+introduces the generic pure function name `length` by primitive recursion on its argument `xs`. The body of a fixpoint function defined by primitive recursion must consist solely of a `switch` statement whose operand is one of the function's parameters. The type of this parameter (called the *inductive parameter*) must be an inductive datatype. The body of each case must be of the form `return E;`. The expression `E` may call fixpoint functions defined earlier, and it may also recursively call the fixpoint function being defined. In the latter case, the argument supplied for the inductive parameter must be one of the variables bound by the parameter list of the current case. (For example, the recursive call `length(xs0)` above is allowed because `xs0` is a variable bound in the header of the case.
+
+The declaration
+
+<pre>
+<b>fixpoint</b> <b>int</b> abs(<b>int</b> x) { <b>return</b> x < 0 ? -x : x; }
+</pre>
+
+introduces the pure function name `abs`. The body of a fixpoint function defined non-recursively must be of the form `return E;` where `E` calls only fixpoint functions defined earlier.
+
+For fixpoint functions defined by well-founded recursion, see the `wf_funcX.c` examples.
+
+### Predicates
+
+<pre>
+<span style="color: purple"><i>predicate-declaration</i>:
     <b>predicate</b> <i>identifier</i> <b>(</b> <i>parameter-list</i> <b>)</b> <b>;</b>
     <i>predicate-keyword</i> <i>identifier</i> <b>(</b> <i>parameter-list</i> <b>)</b> <b>=</b> <i>assertion</i> <b>;</b>
 
@@ -68,19 +122,31 @@ It then checks well-formedness of the various declarations, and then verifies ea
     <b>predicate_family_instance</b> <i>identifier</i> <b>(</b> <i>argument-expression-list</i><sub>opt</sub> <b>)</b> <b>(</b> <i>parameter-list</i> <b>)</b> <b>=</b> <i>assertion</i> <b>;</b>
 
 <i>predicate-constructor-definition</i>:
-    <b>predicate_ctor</b> <i>identifier</i> <b>(</b> <i>parameter-list</i> <b>)</b> <b>(</b> <i>parameter-list</i> <b>)</b> <b>=</b> <i>assertion</i> <b>;</b>
+    <b>predicate_ctor</b> <i>identifier</i> <b>(</b> <i>parameter-list</i> <b>)</b> <b>(</b> <i>parameter-list</i> <b>)</b> <b>=</b> <i>assertion</i> <b>;</b></span>
+</pre>
 
-<i>lemma-function-declaration</i>:
+### Lemma functions
+
+<pre>
+<span style="color: purple"><i>lemma-function-declaration</i>:
     <b>lemma</b> <i>declaration</i>
     <b>lemma</b> <i>function-definition</i></span>
+</pre>
 
+### Function definitions
+
+<pre>
 <i>function-definition</i>:
     <i>declaration-specifiers</i> <i>declarator</i> <i>declaration-list</i><sub>opt</sub> <i>compound-statement</i>
 
 <i>declaration-list</i>:
     <i>declaration</i>
     <i>declaration-list</i> <i>declaration</i>
+</pre>
 
+### Declarations
+
+<pre>
 <i>declaration</i>:
     <i>declaration-specifiers</i> <i>init-declarator-list</i><sub>opt</sub> <b>;</b>
     <i>static_assert-declaration</i>
