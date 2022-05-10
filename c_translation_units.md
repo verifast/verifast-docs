@@ -285,29 +285,26 @@ For fixpoint functions defined by well-founded recursion, see the `wf_funcX.c` e
     <i>direct-declarator</i> <b>[</b> <b>static</b> <i>type-qualifier-list</i><sub>opt</sub> <i>assignment-expression</i> <b>]</b>
     <i>direct-declarator</i> <b>[</b> <i>type-qualifier-list</i> <b>static</b> <i>assignment-expression</i> <b>]</b>
     <i>direct-declarator</i> <b>[</b> <i>type-qualifier-list</i><sub>opt</sub> <b>*</b> <b>]</b>
-    <i>direct-declarator</i> <span style="color: purple"><i>generic-parameters</i><sub>opt</sub></span> <b>(</b> <i>parameter-type-list</i> <b>)</b> <i style="color: purple">specification</i><sub>opt</sub>
+    <i>direct-declarator</i> <span style="color: purple"><i>generic-parameters</i><sub>opt</sub></span> <b>(</b> <i>parameter-type-list</i> <b>)</b> <span style="color: purple"><i>specification-clauses</i><sub>opt</sub></span>
     <i>direct-declarator</i> <b>(</b> <i>identifier-list</i><sub>opt</sub> <b>)</b>
 
-<span style="color: purple"><i>specification</i>:
-    <i>function-type-clause</i><sub>opt</sub> <i>requires-clause</i> <i>ensures-clause</i> <i>terminates-clause</i><sub>opt</sub>
+<span style="color: purple"><i>specification-clauses</i>:
+    <i>specification-clause</i>
+    <i>specification-clauses</i> <i>specification-clause</i>
 
-<i>function-type-clause</i>:
-    <b>/*@</b> <b>:</b> <i>identifier</i> <i>arguments</i><sub>opt</sub> </b>*@/</b>
+<i>specification-clause</i>:
+    <b>/*@</b> <i>specification-ghost-clause</i> <b>@*/</b>
+    <i>specification-ghost-clause</i>
+
+<i>specification-ghost-clause</i>:
+    <b>nonghost_callers_only</b>
+    <b>:</b> <i>identifier</i> <i>arguments</i><sub>opt</sub>
+    <b>requires</b> <i>assertion</i> <b>;</b>
+    <b>ensures</b> <i>assertion</i> <b>;</b>
+    <b>terminates</b> <b>;</b></span>
 
 <i>arguments</i>:
     <b>(</b> <i>argument-expression-list</i> <b>)</b>
-
-<i>requires-clause</i>:
-    <b>/*@</b> <b>requires</b> <i>assertion</i> <b>;</b> <b>@*/</b>
-    <b>requires</b> <i>assertion</i> <b>;</b>
-
-<i>ensures-clause</i>:
-    <b>/*@</b> <b>ensures</b> <i>assertion</i> <b>;</b> <b>@*/</b>
-    <b>ensures</b> <i>assertion</i> <b>;</b>
-
-<i>terminates-clause</i>:
-    <b>/*@</b> <b>terminates</b> <b>;</b> <b>@*/</b>
-    <b>terminates</b> <b>;</b></span>
 
 <i>pointer</i>:
     <b>*</b> <i>type-qualifier-list</i><sub>opt</sub>
@@ -592,12 +589,17 @@ See [*Shared boxes: rely-guarantee reasoning in VeriFast*](http://www.cs.kuleuve
     <i>shift-expression</i> <b>&lt;&lt;</b> <i>additive-expression</i>
     <i>shift-expression</i> <b>>></b> <i>additive-expression</i>
 
-<i>relational-expression</i>:
+<span style="color: purple"><i>truncating-expression</i>:
     <i>shift-expression</i>
-    <i>relational-expression</i> <b>&lt;</b> <i>shift-expression</i>
-    <i>relational-expression</i> <b>></b> <i>shift-expression</i>
-    <i>relational-expression</i> <b>&lt;=</b> <i>shift-expression</i>
-    <i>relational-expression</i> <b>>=</b> <i>shift-expressions</i>
+    <b>/*@</b> <b>truncating</b> <b>@*/</b> <i>postfix-expression</i>
+    <b>truncating</b> <i>postfix-expression</i></span>
+
+<i>relational-expression</i>:
+    <i style="color: purple">truncating-expression</i>
+    <i>relational-expression</i> <b>&lt;</b> <i style="color: purple">truncating-expression</i>
+    <i>relational-expression</i> <b>></b> <i style="color: purple">truncating-expression</i>
+    <i>relational-expression</i> <b>&lt;=</b> <i style="color: purple">truncating-expression</i>
+    <i>relational-expression</i> <b>>=</b> <i style="color: purple">truncating-expression</i>
 
 <i>equality-expression</i>:
     <i>relational-expression</i>
