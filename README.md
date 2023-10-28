@@ -4,6 +4,7 @@ This repository contains some work-in-progress documentation for [VeriFast](http
 
 - [FAQ](faq.md)
 - [C grammar with VeriFast annotations](c_translation_units.md)
+- [Java grammar](java_translation_units.md)
 - [Symbolic execution](symexec.md)
 
 See also:
