@@ -16,6 +16,11 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
 <i>Type:</i>
   <i>PrimitiveType</i>
   <i>ReferenceType</i>
+  <font color=purple><i>Identifier</i> <i>[TypeArguments]</i>
+  real
+  fixpoint ( <i>TypeArgumentList</i> )
+  predicate <i>PredicateParameters</i>
+  any</font>
 
 <i>PrimitiveType:</i>
   <i>NumericType</i>
@@ -101,7 +106,7 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
   <s><i>ModularCompilationUnit</i></s>
 
 <i>OrdinaryCompilationUnit:</i>
-  <i>[PackageDeclaration] {ImportDeclaration} {TopLevelClassOrInterfaceDeclaration}</i>
+  <i>[PackageDeclaration] {ImportDeclaration} {TopLevelDeclaration}</i>
 
 <i>PackageDeclaration:</i>
   package <i>Identifier</i> <i>{</i>. <i>Identifier</i><i>}</i> ;
@@ -117,6 +122,10 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
 
 <i>TypeImportOnDemandDeclaration:</i>
   import <i>PackageOrTypeName</i> . * ;
+
+<i>TopLevelDeclaration:</i>
+  <i>TopLevelClassOrInterfaceDeclaration</i>
+  <font color=purple><i>GhostDeclarationBlock</i></font>
 
 <i>TopLevelClassOrInterfaceDeclaration:</i>
   <i>ClassDeclaration</i>
@@ -197,7 +206,7 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
   abstract static final <s>synchronized</s> <s>native</s> <s>strictfp</s>
 
 <i>MethodHeader:</i>
-  <i>Result</i> <i>MethodDeclarator</i> <i>[Throws]</i>
+  <i>Result</i> <i>MethodDeclarator</i> <i>[Throws]</i> <font color=purple><i>{SpecificationClause}</i></font>
   <s><i>TypeParameters</i> <i>{Annotation}</i> <i>Result</i> <i>MethodDeclarator</i> <i>[Throws]</i></s>
 
 <i>Result:</i>
@@ -223,6 +232,17 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
 <i>ExceptionType:</i>
   <i>ClassType</i>
   <s><i>TypeVariable</i></s>
+
+<font color=purple><i>SpecificationClause:</i>
+  /*@ <i>SpecificationGhostClause</i> @*/
+  <i>SpecificationGhostClause</i>
+
+<i>SpecificationGhostClause:</i>
+  nonghost_callers_only
+  : <i>Identifier</i> <i>[</i>( <i>ArgumentList</i> )<i>]</i>
+  requires <i>Assertion</i> ;
+  ensures <i>Assertion</i> ;
+  terminates ;</font>
 
 <i>MethodBody:</i>
   <i>Block</i>
@@ -297,6 +317,59 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
 <i>VariableInitializerList:</i>
   <i>VariableInitializer</i> <i>{</i>, <i>VariableInitializer</i><i>}</i>
 
+<font color=purple><i>GhostDeclarationBlock:</i>
+  /*@ <i>{GhostDeclaration}</i> @*/
+
+<i>GhostDeclaration:
+  InductiveDatatypeDeclaration
+  FixpointFunctionDefinition
+  PredicateDeclaration
+  PredicateFamilyDeclaration
+  FredicateFamilyInstanceDefinition
+  PredicateConstructorDefinition
+  LemmaFunctionDeclaration
+  BoxClassDeclaration</i>
+
+<i>InductiveDatatypeDeclaration:</i>
+  inductive <i>Identifier</i> <i>[GenericParameters]</i> = <i>[</i>|<i>]</i> <i>InductiveDatatypeCase</i> <i>{</i>| <i>InductiveDatatypeCase</i><i>}</i> ;
+
+<i>GenericParameters:</i>
+  < <i>Identifier</i> <i>{</i>, <i>Identifier</i><i>}</i> >
+
+<i>InductiveDatatypeCase:</i>
+  <i>Identifier</i> <i>[</i> ( <i>[FormalParameterList]</i> ) <i>]</i>
+
+<i>FixpointFunctionDefintion:</i>
+  fixpoint <i>MethodDeclaration</i>
+
+<i>PredicateDeclaration:</i>
+  predicate <i>Identifier</i> <i>[GenericParameters]</i> <i>PredicateParameters</i> ;
+  <i>PredicateKeyword</i> <i>Identifier</i> <i>[GenericParameters]</i> <i>PredicateParameters</i> = <i>Assertion</i> ;
+
+<i>PredicateKeyword:</i>
+  predicate
+  copredicate
+
+<i>PredicateParameters:</i>
+  ( <i>[FormalParameterList]</i> )
+  ( <i>[FormalParameterList]</i> ; <i>[FormalParameterList]</i> )
+
+<i>PredicateFamilyDeclaration:</i>
+  predicate_family <i>Identifier</i> ( <i>[FormalParameterList]</i> ) <i>PredicateParameters</i> ;
+
+<i>PredicateFamilyInstanceDefinition:</i>
+  predicate_family_instance <i>Identifier</i> ( <i>[ArgumentList]</i> ) <i>PredicateParameters</i> = <i>Assertion</i> ;
+
+<i>PredicateConstructorDefinition:</i>
+  predicate_ctor <i>Identifier</i> ( <i>FormalParameterList</i> ) ( <i>[FormalParameterList]</i> ) = <i>Assertion</i> ;
+
+<i>LemmaFunctionDeclaration:</i>
+  <i>LemmaKeyword</i> <i>MethodDeclaration</i>
+
+<i>LemmaKeyword:</i>
+  lemma
+  lemma_auto <i>[</i>( <i>Expression</i> )<i>]</i></font>
+
 <i>Block:</i>
   { <i>[BlockStatements]</i> }
 
@@ -347,6 +420,8 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
   <i>ThrowStatement</i>
   <i>TryStatement</i>
   <s><i>YieldStatement</i></s>
+  <font color=purple><i>GhostStatementBlock</i>
+  <i>GhostStatement</i></font>
 
 <i>EmptyStatement:</i>
   ;
@@ -397,18 +472,19 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
   <s>case null <i>[</i>, default<i>]</i></s>
   <s>case <i>CasePatterm</i> <i>[Guard]</i></s>
   default
+  <font color=purple>case <i>Identifier</i> <i>[</i>( <i>[Identifier</i> <i>{</i>, <i>Identifier}]</i> )<i>]</i></font>
 
 <i>CaseConstant:</i>
   <i>ConditionalExpression</i>
 
 <i>WhileStatement:</i>
-  while ( <i>Expression</i> ) <i>Statement</i>
+  while ( <i>Expression</i> ) <font color=purple><i>{LoopAnnotation}</i></font> <i>Statement</i>
 
 <i>WhileStatementNoShortIf:</i>
-  while ( <i>Expression</i> ) <i>StatementNoShortIf</i>
+  while ( <i>Expression</i> ) <font color=purple><i>{LoopAnnotation}</i></font> <i>StatementNoShortIf</i>
 
 <i>DoStatement:</i>
-  do <i>Statement</i> while ( <i>Expression</i> ) ;
+  do <font color=purple><i>{LoopAnnotation}</i></font> <i>Statement</i> while ( <i>Expression</i> ) ;
 
 <i>ForStatement:</i>
   <i>BasicForStatement</i>
@@ -419,10 +495,10 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
   <s><i>EnhancedForStatementNoShortIf</i></s>
 
 <i>BasicForStatement:</i>
-  for ( <i>[ForInit]</i> ; <i>[Expression]</i> ; <i>[ForUpdate]</i> ) <i>Statement</i>
+  for ( <i>[ForInit]</i> ; <i>[Expression]</i> ; <i>[ForUpdate]</i> ) <font color=purple><i>{LoopAnnotation}</i></font> <i>Statement</i>
 
 <i>BasicForStatementNoShortIf:</i>
-  for ( <i>[ForInit]</i> ; <i>[Expression]</i> ; <i>[ForUpdate]</i> ) <i>StatementNoShortIf</i>
+  for ( <i>[ForInit]</i> ; <i>[Expression]</i> ; <i>[ForUpdate]</i> ) <font color=purple><i>{LoopAnnotation}</i></font> <i>StatementNoShortIf</i>
 
 <i>ForInit:</i>
   <i>StatementExpressionList</i>
@@ -433,6 +509,16 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
 
 <i>StatementExpressionList:</i>
   <i>StatementExpression</i> <i>{</i>, <i>StatementExpression</i><i>}</i>
+
+<font color=purple><i>LoopAnnotation:</i>
+  /*@ <i>LoopGhostAnnotation</i> @*/
+  <i>LoopGhostAnnotation</i>
+
+<i>LoopGhostAnnotation:</i>
+  invariant <i>Assertion</i> ;
+  requires <i>Assertion</i> ;
+  ensures <i>Assertion</i> ;
+  decreases <i>Assertion</i> ;</font>
 
 <i>BreakStatement:</i>
   break <s><i>[Identifier]</i></s> ;
@@ -466,11 +552,63 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
 <i>Finally:</i>
   finally <i>Block</i>
 
+<font color=purple><i>GhostStatementBlock:</i>
+  /*@ <i>GhostStatement</i> @*/
+
+<i>GhostStatement:</i>
+  open <i>[Coefficient]</i> <i>PredicateAssertion</i> ;
+  close <i>[Coefficient]</i> <i>PredicateAssertion</i> ;
+  leak <i>Assertion</i> ;
+  invariant <i>Assertion</i> ;
+  produce_lemma_function_pointer_chunk <i>Identifier</i> <i>[TypeArguments]</i> ( <i>[ArgumentList]</i> ) <i>Identifiers</i> <i>Block</i> <i>Statement</i>
+  duplicate_lemma_function_pointer_chunk ( <i>Expression</i> ) ;
+  produce_function_pointer_chunk <i>Identifier</i> <i>[TypeArguments]</i> ( <i>Expression</i> ) ( <i>[ArgumentList]</i> ) <i>Identifiers</i> <i>Block</i>
+  merge_fractions <i>Assertion</i> ;
+  <i>SharedBoxesGhostStatement</i>
+  <i>Statement</i>
+
+<i>PrimaryAssertion:</i>
+  <i>[Coefficient]</i> <i>PointsToAssertion</i>
+  <i>[Coefficient]</i> <i>PredicateAssertion</i>
+  <i>Expression</i>
+  switch ( <i>Expression</i> ) { <i>{SwitchAssertionCase}</i> }
+  ( <i>Assertion</i> )
+  forall_ ( <i>Type</i> <i>Identifier</i> ; <i>Expression</i> )
+  emp
+
+<i>Coefficient:</i>
+  [ <i>Pattern</i> ]
+
+<i>PointsToAssertion:</i>
+  <i>ConditionalExpression</i> |-> <i>Pattern</i>
+
+<i>PredicateAssertion:</i>
+  <i>Identifier</i> <i>[TypeArguments]</i> <i>[Patterns]</i> <i>Patterns</i>
+
+<i>Patterns:</i>
+  ( <i>[Pattern {</i>, <i>Pattern}]</i> )
+
+<i>Pattern:</i>
+  _
+  ? <i>Identifier</i>
+  <i>Identifier</i> <i>Patterns</i>
+  <i>Expression</i>
+  ^ <i>Expression</i>
+
+<i>SwitchAssertionCase:</i>
+  case <i>Identifier</i> <i>[Identifiers]</i> : return <i>Assertion</i> ;
+
+<i>Assertion:</i>
+  <i>PrimaryAssertion</i>
+  <i>PrimaryAssertion</i> &amp;*&amp; <i>Assertion</i>
+  <i>Expression</i> ? <i>Assertion</i> : <i>Assertion</i>
+  ensures <i>Assertion</i></font>
+
 <i>Primary:</i>
   <i>PrimaryNoNewArray</i>
   <i>ArrayCreationExpression</i>
 
-<i>PrinaryNoNewArray:</i>
+<i>PrimaryNoNewArray:</i>
   <i>Literal</i>
   <i>ClassLiteral</i>
   this
@@ -481,6 +619,13 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
   <i>ArrayAccess</i>
   <i>MethodInvocation</i>
   <s><i>MethodReference</i></s>
+  <font color=purple>switch ( <i>Expression</i> ) { <i>{SwitchExpressionCase}</i> }
+
+<i>SwitchExpressionCase:</i>
+  case <i>Identifier</i> <i>[Identifiers]</i> : return <i>Expression</i> ;
+
+<i>Identifiers:</i>
+  ( <i>[Identifier {</i>, <i>Identifier}]</i> )</font>
 
 <i>ClassLiteral:</i>
   <i>TypeName</i> <s><i>{</i>[ ]<i>}</i></s> . class
@@ -589,16 +734,21 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
   <i>EqualityExpression</i> != <i>RelationalExpression</i>
 
 <i>RelationalExpression:</i>
-  <i>ShiftExpression</i>
-  <i>RelationalExpression</i> &lt; <i>ShiftExpression</i>
-  <i>RelationalExpression</i> &gt; <i>ShiftExpression</i>
-  <i>RelationalExpression</i> &lt;= <i>ShiftExpression</i>
-  <i>RelationalExpression</i> &gt;= <i>ShiftExpression</i>
+  <font color=purple><i>TruncatingExpression</i></font>
+  <i>RelationalExpression</i> &lt; <font color=purple><i>TruncatingExpression</i></font>
+  <i>RelationalExpression</i> &gt; <font color=purple><i>TruncatingExpression</i></font>
+  <i>RelationalExpression</i> &lt;= <font color=purple><i>TruncatingExpression</i></font>
+  <i>RelationalExpression</i> &gt;= <font color=purple><i>TruncatingExpression</i></font>
   <i>InstanceofExpression</i>
 
 <i>InstanceofExpression:</i>
   <i>RelationalExpression</i> instancof <i>ReferenceType</i>
   <s><i>RelationalExpression</i> instanceof <i>Pattern</i></s>
+
+<font color=purple><i>TruncatingExpression:</i>
+  <i>ShiftExpression</i>
+  /*@ truncating @*/ <i>PostfixExpression</i>
+  truncating <i>PostfixExpression</i></font>
 
 <i>ShiftExpression:</i>
   <i>AdditiveExpression</i>
@@ -638,8 +788,8 @@ VeriFast accepts `.java` files that match the <code><i>CompilationUnit</i></code
   <s><i>SwitchExpression</i></s>
 
 <i>PostfixExpression:</i>
-  <i>Prinary</i>
-  <i>ExpressionName</i>
+  <i>Primary</i>
+  <i>ExpressionName</i> <font color=purple><i>[TypeArguments]</i></font>
   <i>PostIncrementExpression</i>
   <i>PostDecrementExpression</i>
 
